@@ -1,4 +1,5 @@
 import Vapor
+import Foundation
 
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
@@ -25,6 +26,20 @@ public func routes(_ router: Router) throws {
         let data = try req.content.syncDecode(InfoData.self)
         return InfoResponse(request: data)
     }
+    
+    router.get("date") { req in
+        return "\(Date())"
+    }
+    
+    router.get("counter", Int.parameter) { req -> CountJSON in
+        let count = try req.parameters.next(Int.self)
+        return CountJSON(count: count)
+    }
+    
+    router.post("user-info") { (req) -> String in
+        let userInfo = try req.content.syncDecode(UserInfoData.self)
+        return "Hello \(userInfo.name), you are \(userInfo.age)"
+    }
 
     // Example of configuring a controller
     let todoController = TodoController()
@@ -39,4 +54,13 @@ struct InfoData: Content {
 
 struct InfoResponse: Content {
     let request: InfoData
+}
+
+struct CountJSON: Content {
+    let count: Int
+}
+
+struct UserInfoData: Content {
+    let name: String
+    let age: Int
 }
