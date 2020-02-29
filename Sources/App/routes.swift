@@ -40,6 +40,11 @@ public func routes(_ router: Router) throws {
         let userInfo = try req.content.syncDecode(UserInfoData.self)
         return "Hello \(userInfo.name), you are \(userInfo.age)"
     }
+    
+    router.post("user-profile") { (req) -> String in
+        let userProfile = try req.content.syncDecode(UserProfileData.self)
+        return "Hello your name is \(userProfile.name) \(userProfile.lastName), you are \(userProfile.gender), you are \(userProfile.age)"
+    }
 
     // Example of configuring a controller
     let todoController = TodoController()
@@ -63,4 +68,12 @@ struct CountJSON: Content {
 struct UserInfoData: Content {
     let name: String
     let age: Int
+}
+
+struct UserProfileData: Content {
+    let name: String
+    let lastName: String
+    let age: Int
+    let gender: String
+    
 }
